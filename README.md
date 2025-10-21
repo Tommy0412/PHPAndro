@@ -1,6 +1,28 @@
 # PHPAndro
 ![Project Screenshot](./image.png)
-Android app that embeds PHP 8.4 and NanoHTTPD to run PHP/HTML files on Android devices.
+PHPAndro is an Android application that embeds a fully functional PHP server directly into your app, allowing you to run PHP scripts locally on your device. It uses NanoHTTPD as the lightweight HTTP server and supports both .php and static files (.html, .css, .js, images, etc.), enabling a seamless PHP development and testing environment on Android.
+
+##  Key Features
+- Run PHP scripts locally – full support for GET and POST requests.
+
+- Serve static files – HTML, CSS, JavaScript, images, and more.
+
+- Dynamic PHP environment – uses php.ini with configurable settings.
+
+- Embedded web server – powered by NanoHTTPD, providing localhost access (http://127.0.0.1:8080).
+
+- WebView integration – easily preview your PHP/HTML content inside the app.
+
+- Automatic asset management – copies and updates PHP and web files on app version changes.
+
+- Cross-platform PHP functionality – works entirely on Android, no external server required.
+
+## Use Cases
+- Mobile PHP development and testing.
+
+- Offline PHP web applications on Android.
+
+- Learning and experimenting with PHP on the go.
 
 ## Requirements
 
