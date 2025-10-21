@@ -89,64 +89,59 @@ static size_t android_ub_write(const char *str, size_t len) {
     return len;
 }
 
-static void set_php_superglobals(const char* method, const char* query, const char* body = nullptr) {
-    // REQUEST_METHOD
-    zend_alter_ini_entry(
-        zend_string_init("REQUEST_METHOD", sizeof("REQUEST_METHOD") - 1, 0),
-        zend_string_init(method, strlen(method), 0),
-        PHP_INI_USER, PHP_INI_STAGE_RUNTIME
-    );
+static void set_php_superglobals(const char* method, const char* query, const char* body)
+{
+    // Initialize _SERVER
+    zval *server_zv;
+    if ((server_zv = zend_hash_str_find(&EG(symbol_table), "_SERVER", sizeof("_SERVER") - 1)) == NULL) {
+        zval tmp;
+        array_init(&tmp);
+        zend_hash_str_update(&EG(symbol_table), "_SERVER", sizeof("_SERVER") - 1, &tmp);
+        server_zv = zend_hash_str_find(&EG(symbol_table), "_SERVER", sizeof("_SERVER") - 1);
+    }
 
-    // QUERY_STRING
-    zend_alter_ini_entry(
-        zend_string_init("QUERY_STRING", sizeof("QUERY_STRING") - 1, 0),
-        zend_string_init(query ? query : "", query ? strlen(query) : 0, 0),
-        PHP_INI_USER, PHP_INI_STAGE_RUNTIME
-    );
+    add_assoc_string(server_zv, "REQUEST_METHOD", method ? method : "GET");
+    add_assoc_string(server_zv, "QUERY_STRING", query ? query : "");
 
-    // _GET
+    // Initialize _GET
+    zval get_arr;
+    array_init(&get_arr);
     if (query && strlen(query) > 0) {
-        char *q = strdup(query);
-        char *token = strtok(q, "&");
-        zval get_arr;
-        array_init(&get_arr);
-
+        char* q = strdup(query);
+        char* token = strtok(q, "&");
         while (token) {
-            char *eq = strchr(token, '=');
+            char* eq = strchr(token, '=');
             if (eq) {
                 *eq = '\0';
-                zend_string *var = zend_string_init(token, strlen(token), 0);
-                zend_string *val = zend_string_init(eq + 1, strlen(eq + 1), 0);
+                zend_string* var = zend_string_init(token, strlen(token), 0);
+                zend_string* val = zend_string_init(eq + 1, strlen(eq + 1), 0);
                 add_assoc_str(&get_arr, ZSTR_VAL(var), val);
                 zend_string_release(var);
             }
-            token = strtok(nullptr, "&");
+            token = strtok(NULL, "&");
         }
-
-        zend_hash_str_update(&EG(symbol_table), "_GET", sizeof("_GET") - 1, &get_arr);
         free(q);
     }
+    zend_hash_str_update(&EG(symbol_table), "_GET", sizeof("_GET") - 1, &get_arr);
 
-    // _POST (only for POST method)
-    if (strcmp(method, "POST") == 0 && body && strlen(body) > 0) {
+    // Initialize _POST
+    if (method && strcmp(method, "POST") == 0 && body && strlen(body) > 0) {
         zval post_arr;
         array_init(&post_arr);
-
-        char *b = strdup(body);
-        char *token = strtok(b, "&");
+        char* b = strdup(body);
+        char* token = strtok(b, "&");
         while (token) {
-            char *eq = strchr(token, '=');
+            char* eq = strchr(token, '=');
             if (eq) {
                 *eq = '\0';
-                zend_string *var = zend_string_init(token, strlen(token), 0);
-                zend_string *val = zend_string_init(eq + 1, strlen(eq + 1), 0);
+                zend_string* var = zend_string_init(token, strlen(token), 0);
+                zend_string* val = zend_string_init(eq + 1, strlen(eq + 1), 0);
                 add_assoc_str(&post_arr, ZSTR_VAL(var), val);
                 zend_string_release(var);
             }
-            token = strtok(nullptr, "&");
+            token = strtok(NULL, "&");
         }
         free(b);
-
         zend_hash_str_update(&EG(symbol_table), "_POST", sizeof("_POST") - 1, &post_arr);
     }
 }

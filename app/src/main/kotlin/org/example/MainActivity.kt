@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import fi.iki.elonen.NanoHTTPD
 import java.io.File
 import java.io.FileOutputStream
+import android.app.AlertDialog
+import android.webkit.WebChromeClient
+import android.webkit.JsResult
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,12 +31,12 @@ class MainActivity : AppCompatActivity() {
         // --- Check app version ---
         val prefs = getSharedPreferences("app_info", Context.MODE_PRIVATE)
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
-        val currentVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            packageInfo.longVersionCode.toInt()
-        } else {
-            @Suppress("DEPRECATION")
-            packageInfo.versionCode
-        }
+        val currentVersion =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    packageInfo.longVersionCode.toInt()
+                } else {
+                    @Suppress("DEPRECATION") packageInfo.versionCode
+                }
         val savedVersion = prefs.getInt("saved_version", -1)
 
         if (currentVersion != savedVersion) {
@@ -52,60 +55,82 @@ class MainActivity : AppCompatActivity() {
         // --- Prepare php.ini ---
         val iniFile = File(phpDir, "php.ini")
         val phpIniContent = assets.open("php/php.ini").bufferedReader().use { it.readText() }
-        val modifiedIni = phpIniContent
-            .replace(
-                Regex("^upload_tmp_dir\\s*=.*", RegexOption.MULTILINE),
-                "upload_tmp_dir = \"${tmpDir.absolutePath}\""
-            )
-            .replace(
-                Regex("^session.save_path\\s*=.*", RegexOption.MULTILINE),
-                "session.save_path = \"${tmpDir.absolutePath}\""
-            )
+        val modifiedIni =
+                phpIniContent
+                        .replace(
+                                Regex("^upload_tmp_dir\\s*=.*", RegexOption.MULTILINE),
+                                "upload_tmp_dir = \"${tmpDir.absolutePath}\""
+                        )
+                        .replace(
+                                Regex("^session.save_path\\s*=.*", RegexOption.MULTILINE),
+                                "session.save_path = \"${tmpDir.absolutePath}\""
+                        )
         iniFile.writeText(modifiedIni)
 
         // --- Start embedded PHP server ---
-        server = object : NanoHTTPD(8080) {
-            override fun serve(session: IHTTPSession): Response {
-                val uri = session.uri.removePrefix("/")
-                val method = session.method.name
-                val query = session.queryParameterString ?: ""
-                val body = if (session.method == Method.POST) {
-                    session.inputStream.bufferedReader().use { it.readText() }
-                } else {
-                    ""
-                }
+        server =
+                object : NanoHTTPD(8080) {
+                    override fun serve(session: IHTTPSession): Response {
+                        val uri = session.uri.removePrefix("/")
+                        val method = session.method.name
+                        val query = session.queryParameterString ?: ""
+                        val body =
+                                if (session.method == Method.POST) {
+                                    session.inputStream.bufferedReader().use { it.readText() }
+                                } else {
+                                    ""
+                                }
 
-                Log.d("PHPServer", "Serve: uri=$uri, method=$method, query=$query, bodyLength=${body.length}")
-
-                val file = if (uri.isEmpty()) { val phpIndex = File(wwwDir, "index.php"); val htmlIndex = File(wwwDir, "index.html"); if (phpIndex.exists()) phpIndex else if (htmlIndex.exists()) htmlIndex else File(wwwDir, "index.php") } else File(wwwDir, uri)
-
-                return if (file.exists()) {
-                    if (file.extension.equals("php", ignoreCase = true)) {
-                        val output = phpRunner.runPhpFile(
-                            file.absolutePath,
-                            iniFile.absolutePath,
-                            method,
-                            query,
-                            body
+                        Log.d(
+                                "PHPServer",
+                                "Serve: uri=$uri, method=$method, query=$query, bodyLength=${body.length}"
                         )
-                        newFixedLengthResponse(Response.Status.OK, "text/html; charset=utf-8", output)
-                    } else {
-                        val content = file.readBytes()
-                        val mime = getMimeType(file.extension)
-                        Log.d("PHPServer", "Serving static file: ${file.name}")
-                        newFixedLengthResponse(
-                            Response.Status.OK,
-                            mime,
-                            content.inputStream(),
-                            content.size.toLong()
-                        )
+
+                        val file =
+                                if (uri.isEmpty()) {
+                                    val phpIndex = File(wwwDir, "index.php")
+                                    val htmlIndex = File(wwwDir, "index.html")
+                                    if (phpIndex.exists()) phpIndex
+                                    else if (htmlIndex.exists()) htmlIndex
+                                    else File(wwwDir, "index.php")
+                                } else File(wwwDir, uri)
+
+                        return if (file.exists()) {
+                            if (file.extension.equals("php", ignoreCase = true)) {
+                                val output =
+                                        phpRunner.runPhpFile(
+                                                file.absolutePath,
+                                                iniFile.absolutePath,
+                                                method,
+                                                query,
+                                                body
+                                        )
+                                newFixedLengthResponse(
+                                        Response.Status.OK,
+                                        "text/html; charset=utf-8",
+                                        output
+                                )
+                            } else {
+                                val content = file.readBytes()
+                                val mime = getMimeType(file.extension)
+                                Log.d("PHPServer", "Serving static file: ${file.name}")
+                                newFixedLengthResponse(
+                                        Response.Status.OK,
+                                        mime,
+                                        content.inputStream(),
+                                        content.size.toLong()
+                                )
+                            }
+                        } else {
+                            Log.d("PHPServer", "File not found: ${file.absolutePath}")
+                            newFixedLengthResponse(
+                                    Response.Status.NOT_FOUND,
+                                    "text/plain",
+                                    "404 Not Found"
+                            )
+                        }
                     }
-                } else {
-                    Log.d("PHPServer", "File not found: ${file.absolutePath}")
-                    newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "404 Not Found")
                 }
-            }
-        }
 
         server.start()
 
@@ -125,12 +150,40 @@ class MainActivity : AppCompatActivity() {
             setSupportZoom(true)
         }
 
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                request?.url?.let { view?.loadUrl(it.toString()) }
-                return true
-            }
-        }
+        webView.webViewClient =
+                object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(
+                            view: WebView?,
+                            request: WebResourceRequest?
+                    ): Boolean {
+                        request?.url?.let { view?.loadUrl(it.toString()) }
+                        return true
+                    }
+                }
+
+        webView.webChromeClient =
+                object : WebChromeClient() {
+                    override fun onJsAlert(
+                            view: WebView?,
+                            url: String?,
+                            message: String?,
+                            result: JsResult?
+                    ): Boolean {
+                        android.util.Log.d("WebViewAlert", "JS alert: $message")
+                        // Show alert as a native dialog (optional)
+                        AlertDialog.Builder(view?.context ?: this@MainActivity)
+                                .setMessage(message)
+                                .setPositiveButton(android.R.string.ok) { _, _ ->
+                                    result?.confirm()
+                                }
+                                .setCancelable(false)
+                                .create()
+                                .show()
+
+                        // Tell WebView we handled it
+                        return true
+                    }
+                }
 
         webView.loadUrl("http://127.0.0.1:8080")
     }
@@ -144,42 +197,41 @@ class MainActivity : AppCompatActivity() {
                 copyAssetsToInternal(fullSrc, outFile)
             } else {
                 assets.open(fullSrc).use { input ->
-                    FileOutputStream(outFile).use { output ->
-                        input.copyTo(output)
-                    }
+                    FileOutputStream(outFile).use { output -> input.copyTo(output) }
                 }
             }
         }
     }
 
-    private fun getMimeType(ext: String): String = when (ext.lowercase()) {
-        "html", "htm" -> "text/html"
-        "js" -> "application/javascript"
-        "json" -> "application/json"
-        "css" -> "text/css"
-        "png" -> "image/png"
-        "jpg", "jpeg" -> "image/jpeg"
-        "gif" -> "image/gif"
-        "svg" -> "image/svg+xml"
-        "ico" -> "image/x-icon"
-        "woff" -> "font/woff"
-        "woff2" -> "font/woff2"
-        "ttf" -> "font/ttf"
-        "eot" -> "application/vnd.ms-fontobject"
-        "otf" -> "font/otf"
-        "mp4" -> "video/mp4"
-        "webm" -> "video/webm"
-        "ogv" -> "video/ogg"
-        "mp3" -> "audio/mpeg"
-        "ogg" -> "audio/ogg"
-        "wav" -> "audio/wav"
-        "xml" -> "application/xml"
-        "pdf" -> "application/pdf"
-        "zip" -> "application/zip"
-        "rar" -> "application/x-rar-compressed"
-        "7z" -> "application/x-7z-compressed"
-        else -> "text/plain"
-    }
+    private fun getMimeType(ext: String): String =
+            when (ext.lowercase()) {
+                "html", "htm" -> "text/html"
+                "js" -> "application/javascript"
+                "json" -> "application/json"
+                "css" -> "text/css"
+                "png" -> "image/png"
+                "jpg", "jpeg" -> "image/jpeg"
+                "gif" -> "image/gif"
+                "svg" -> "image/svg+xml"
+                "ico" -> "image/x-icon"
+                "woff" -> "font/woff"
+                "woff2" -> "font/woff2"
+                "ttf" -> "font/ttf"
+                "eot" -> "application/vnd.ms-fontobject"
+                "otf" -> "font/otf"
+                "mp4" -> "video/mp4"
+                "webm" -> "video/webm"
+                "ogv" -> "video/ogg"
+                "mp3" -> "audio/mpeg"
+                "ogg" -> "audio/ogg"
+                "wav" -> "audio/wav"
+                "xml" -> "application/xml"
+                "pdf" -> "application/pdf"
+                "zip" -> "application/zip"
+                "rar" -> "application/x-rar-compressed"
+                "7z" -> "application/x-7z-compressed"
+                else -> "text/plain"
+            }
 
     override fun onDestroy() {
         super.onDestroy()
