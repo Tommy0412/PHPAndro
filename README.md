@@ -27,7 +27,7 @@ app/src/main/assets/www/
 
 ## Features
 
-- PHP 8.4 with basic extensions
+- PHP 8.4 with 21. extensions
 - NanoHTTPD web server
 - Easy file placement in assets folder
 
