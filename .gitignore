@@ -51,10 +51,6 @@ google-services.json
 lint/intermediates/
 lint/generated/
 
-# NDK
-obj/
-*.so
-
 # Kotlin specific
 *.kotlin_module
 
