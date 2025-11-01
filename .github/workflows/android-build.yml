@@ -27,12 +27,54 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Upload Debug APK
+      - name: Upload Debug APK to artifacts
         uses: actions/upload-artifact@v4
         with:
           name: PHPAndro-debug-apk
-<<<<<<< HEAD
           path: app/build/outputs/apk/debug/app-debug.apk
-=======
-          path: app/build/outputs/apk/debug/app-debug.apk
->>>>>>> fac434887678e6cdb2f76a3ea1507ed02ad673f0
+
+  release:
+    name: Create Release and Upload APK
+    runs-on: ubuntu-latest
+    needs: build
+    # Only run on push to main (not on pull requests)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: PHPAndro-debug-apk
+          path: ./
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: build-${{ github.run_number }}
+          release_name: Build ${{ github.run_number }}
+          body: |
+            Automatic build from commit ${{ github.sha }}
+            
+            **Build Details:**
+            - Commit: ${{ github.sha }}
+            - Branch: ${{ github.ref }}
+            - Build Number: ${{ github.run_number }}
+            - Built on: ${{ github.event.head_commit.timestamp }}
+          draft: false
+          prerelease: false
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./app-debug.apk
+          asset_name: PHPAndro-debug-${{ github.run_number }}.apk
+          asset_content_type: application/vnd.android.package-archive
