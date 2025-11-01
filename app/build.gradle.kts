@@ -1,18 +1,18 @@
 plugins {
-    id("com.android.application") version "8.5.1"
+    id("com.android.application") version "8.13.0"
     
-    id("org.jetbrains.kotlin.android") version "1.9.23"
+    id("org.jetbrains.kotlin.android") version "2.1.10"
 }
 
 android {
     namespace = "com.tommy0412.phpandro"
-    compileSdk = 34 
+    compileSdk = 36 
 	ndkVersion = "27.0.12077973"
 
     defaultConfig {
         applicationId = "com.tommy0412.phpandro"
         minSdk = 28 
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         
@@ -22,12 +22,12 @@ android {
     }
 	
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 	
     buildTypes {
@@ -48,9 +48,9 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-	implementation("com.google.android.material:material:1.11.0")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
+	implementation("com.google.android.material:material:1.13.0")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.10")
 	implementation("org.nanohttpd:nanohttpd:2.3.1")
 }
