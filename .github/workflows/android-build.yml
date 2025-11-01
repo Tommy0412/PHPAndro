@@ -5,11 +5,10 @@ on:
     branches:
       - main
   pull_request:
-  
-# Add permissions section
+
 permissions:
   contents: write
-  
+
 jobs:
   build:
     name: Build Android APK
@@ -41,22 +40,20 @@ jobs:
     name: Create Release and Upload APK
     runs-on: ubuntu-latest
     needs: build
-    # Only run on push to main (not on pull requests)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
-    # Add permissions to the release job
     permissions:
       contents: write
       
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Download APK artifact
         uses: actions/download-artifact@v4
         with:
           name: PHPAndro-debug-apk
           path: ./
+
+      - name: List files (debugging)
+        run: ls -la
 
       - name: Create GitHub Release
         id: create_release
@@ -85,5 +82,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./app-debug.apk
           asset_name: PHPAndro-debug-${{ github.run_number }}.apk
-          asset_content_type: application/vnd.android.package-archive
           asset_content_type: application/vnd.android.package-archive
