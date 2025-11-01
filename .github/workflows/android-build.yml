@@ -5,7 +5,11 @@ on:
     branches:
       - main
   pull_request:
-
+  
+# Add this permissions section
+permissions:
+  contents: write
+  
 jobs:
   build:
     name: Build Android APK
@@ -40,6 +44,13 @@ jobs:
     # Only run on push to main (not on pull requests)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
+<<<<<<< HEAD
+=======
+    # Also add permissions to the release job
+    permissions:
+      contents: write
+      
+>>>>>>> a885abc67ea33d658577790ca831e8e368805d10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -77,4 +88,8 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./app-debug.apk
           asset_name: PHPAndro-debug-${{ github.run_number }}.apk
+<<<<<<< HEAD
           asset_content_type: application/vnd.android.package-archive
+=======
+          asset_content_type: application/vnd.android.package-archive
+>>>>>>> a885abc67ea33d658577790ca831e8e368805d10
