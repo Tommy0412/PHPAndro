@@ -31,4 +31,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PHPAndro-debug-apk
+<<<<<<< HEAD
           path: app/build/outputs/apk/debug/app-debug.apk
+=======
+          path: app/build/outputs/apk/debug/app-debug.apk
+>>>>>>> fac434887678e6cdb2f76a3ea1507ed02ad673f0

@@ -37,7 +37,8 @@ PHPAndro is an Android application that embeds a fully functional PHP server dir
 1. Clone this repository
 2. Open project in Android Studio
 3. Place your PHP/HTML files in `app/src/main/assets/www/`
-4. Build and run the app
+4. Change package name and update JNI function name in \app\src\main\cpp\native-lib.cpp (if your app is com.myapp jni function must be Java_com_myapp_PhpRunner_runPhpFile
+6. Build and run the app
 
 ## Project Structure
 app/src/main/assets/www/
