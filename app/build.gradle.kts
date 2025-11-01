@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace = "org.example"
+    namespace = "com.tommy0412.phpandro"
     compileSdk = 34 
-	ndkVersion = "25.1.8937393"
+	ndkVersion = "27.0.12077973"
 
     defaultConfig {
-        applicationId = "org.example"
+        applicationId = "com.tommy0412.phpandro"
         minSdk = 28 
         targetSdk = 34
         versionCode = 1

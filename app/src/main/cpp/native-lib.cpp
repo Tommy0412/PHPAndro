@@ -147,7 +147,7 @@ static void set_php_superglobals(const char* method, const char* query, const ch
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_org_example_PhpRunner_runPhpFile(
+Java_com_tommy0412_phpandro_PhpRunner_runPhpFile(
     JNIEnv *env, jobject,
     jstring jPath, jstring jIniPath,
     jstring jMethod, jstring jQuery, jstring jBody

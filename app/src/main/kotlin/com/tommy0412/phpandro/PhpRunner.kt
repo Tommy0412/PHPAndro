@@ -1,4 +1,4 @@
-package org.example
+package com.tommy0412.phpandro
 
 class PhpRunner {
 
