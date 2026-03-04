@@ -1889,7 +1889,7 @@
 /* #undef PHP_BUILD_PROVIDER */
 
 /* The system that PHP was built on. */
-#define PHP_BUILD_SYSTEM "Linux buildkitsandbox 6.11.0-1018-azure #18~24.04.1-Ubuntu SMP Sat Jun 28 04:46:03 UTC 2025 x86_64 Linux"
+#define PHP_BUILD_SYSTEM "Linux buildkitsandbox 6.14.0-1017-azure #17~24.04.1-Ubuntu SMP Mon Dec 1 20:10:50 UTC 2025 x86_64 Linux"
 
 /* Define to 1 if your system has fork/vfork/CreateProcess. */
 #define PHP_CAN_SUPPORT_PROC_OPEN 1
@@ -1982,7 +1982,7 @@
 #define PHP_SIGCHILD 0
 
 /* The 'uname -a' output. */
-#define PHP_UNAME "Linux buildkitsandbox 6.11.0-1018-azure #18~24.04.1-Ubuntu SMP Sat Jun 28 04:46:03 UTC 2025 x86_64 Linux"
+#define PHP_UNAME "Linux buildkitsandbox 6.14.0-1017-azure #17~24.04.1-Ubuntu SMP Mon Dec 1 20:10:50 UTC 2025 x86_64 Linux"
 
 /* Define to 1 if PHP uses its own crypt_r, and to 0 if using the external
    crypt library. */
