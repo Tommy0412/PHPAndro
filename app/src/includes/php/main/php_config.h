@@ -384,10 +384,10 @@
 #define HAVE_ATOLL 1
 
 /* Define to 1 if the compiler supports the 'aligned' variable attribute. */
-/* #undef HAVE_ATTRIBUTE_ALIGNED */
+#define HAVE_ATTRIBUTE_ALIGNED 1
 
 /* Define to 1 if the PHP extension 'bcmath' is available. */
-/* #undef HAVE_BCMATH */
+#define HAVE_BCMATH 1
 
 /* Define to 1 if you have the 'bind_textdomain_codeset' function. */
 /* #undef HAVE_BIND_TEXTDOMAIN_CODESET */
@@ -405,7 +405,7 @@
 #define HAVE_BUNDLED_PCRE 1
 
 /* Define to 1 if the PHP extension 'bz2' is available. */
-/* #undef HAVE_BZ2 */
+#define HAVE_BZ2 1
 
 /* Define to 1 if the PHP extension 'calendar' is available. */
 /* #undef HAVE_CALENDAR */
@@ -555,7 +555,7 @@
 /* #undef HAVE_DNS_H */
 
 /* Define to 1 if you have the 'dns_search' function. */
-#define HAVE_DNS_SEARCH 1
+/* #undef HAVE_DNS_SEARCH */
 
 /* Define to 1 if you have the 'dn_expand' function. */
 #define HAVE_DN_EXPAND 1
@@ -573,7 +573,7 @@
 /* #undef HAVE_EACCESS */
 
 /* Define to 1 if you have the 'elf_aux_info' function. */
-#define HAVE_ELF_AUX_INFO 1
+/* #undef HAVE_ELF_AUX_INFO */
 
 /* Define to 1 if the odbc extension uses the Empress. */
 /* #undef HAVE_EMPRESS */
@@ -604,13 +604,13 @@
 /* #undef HAVE_ESOOB */
 
 /* Define to 1 if the PHP extension 'exif' is available. */
-/* #undef HAVE_EXIF */
+#define HAVE_EXIF 1
 
 /* Define to 1 if you have the 'explicit_bzero' function. */
-#define HAVE_EXPLICIT_BZERO 1
+/* #undef HAVE_EXPLICIT_BZERO */
 
 /* Define to 1 if you have the 'explicit_memset' function. */
-#define HAVE_EXPLICIT_MEMSET 1
+/* #undef HAVE_EXPLICIT_MEMSET */
 
 /* Define to 1 if you have the <fcntl.h> header file. */
 #define HAVE_FCNTL_H 1
@@ -688,7 +688,7 @@
 /* #undef HAVE_FUNC_ATTRIBUTE_TARGET */
 
 /* Define to 1 if the system has the `visibility' function attribute */
-/* #undef HAVE_FUNC_ATTRIBUTE_VISIBILITY */
+#define HAVE_FUNC_ATTRIBUTE_VISIBILITY 1
 
 /* Define to 1 if you have the three-argument form of gethostbyname_r(). */
 /* #undef HAVE_FUNC_GETHOSTBYNAME_R_3 */
@@ -774,7 +774,7 @@
 #define HAVE_GETIFADDRS 1
 
 /* Define to 1 if you have the 'getloadavg' function. */
-#define HAVE_GETLOADAVG 1
+/* #undef HAVE_GETLOADAVG */
 
 /* Define to 1 if you have the 'getlogin' function. */
 #define HAVE_GETLOGIN 1
@@ -828,7 +828,7 @@
 #define HAVE_GETTIMEOFDAY 1
 
 /* Define to 1 if you have the 'getwd' function. */
-#define HAVE_GETWD 1
+/* #undef HAVE_GETWD */
 
 /* Define to 1 if iconv implementation is glibc. */
 /* #undef HAVE_GLIBC_ICONV */
@@ -861,7 +861,7 @@
 /* #undef HAVE_IBM_ICONV */
 
 /* Define to 1 if the PHP extension 'iconv' is available. */
-#define HAVE_ICONV 1
+/* #undef HAVE_ICONV */
 
 /* Define to 1 if you have the <ieeefp.h> header file. */
 /* #undef HAVE_IEEEFP_H */
@@ -1045,16 +1045,16 @@
 /* #undef HAVE_MAKEDEV */
 
 /* Define to 1 if mbstring has multibyte regex support enabled. */
-/* #undef HAVE_MBREGEX */
+#define HAVE_MBREGEX 1
 
 /* Define to 1 if the PHP extension 'mbstring' is available. */
-/* #undef HAVE_MBSTRING */
+#define HAVE_MBSTRING 1
 
 /* Define to 1 if you have the 'memcntl' function. */
-#define HAVE_MEMCNTL 1
+/* #undef HAVE_MEMCNTL */
 
 /* Define to 1 if you have the 'memfd_create' function. */
-#define HAVE_MEMFD_CREATE 1
+/* #undef HAVE_MEMFD_CREATE */
 
 /* Define to 1 if you have the 'memmem' function. */
 #define HAVE_MEMMEM 1
@@ -1183,7 +1183,7 @@
 
 /* Define to 1 if you have the 'posix_spawn_file_actions_addchdir_np'
    function. */
-#define HAVE_POSIX_SPAWN_FILE_ACTIONS_ADDCHDIR_NP 1
+/* #undef HAVE_POSIX_SPAWN_FILE_ACTIONS_ADDCHDIR_NP */
 
 /* Define to 1 if libpq has the 'PQclosePrepared' function (PostgreSQL 17 or
    later). */
@@ -1216,22 +1216,22 @@
 #define HAVE_PTHREAD_ATTR_GETSTACK 1
 
 /* Define to 1 if you have the 'pthread_attr_get_np' function. */
-#define HAVE_PTHREAD_ATTR_GET_NP 1
+/* #undef HAVE_PTHREAD_ATTR_GET_NP */
 
 /* Define to 1 if you have the 'pthread_getattr_np' function. */
 #define HAVE_PTHREAD_GETATTR_NP 1
 
 /* Define to 1 if you have the 'pthread_get_stackaddr_np' function. */
-#define HAVE_PTHREAD_GET_STACKADDR_NP 1
+/* #undef HAVE_PTHREAD_GET_STACKADDR_NP */
 
 /* Define to 1 if you have the 'pthread_jit_write_protect_np' function. */
-#define HAVE_PTHREAD_JIT_WRITE_PROTECT_NP 1
+/* #undef HAVE_PTHREAD_JIT_WRITE_PROTECT_NP */
 
 /* Define to 1 if you have the 'pthread_set_qos_class_self_np' function. */
 /* #undef HAVE_PTHREAD_SET_QOS_CLASS_SELF_NP */
 
 /* Define to 1 if you have the 'pthread_stackseg_np' function. */
-#define HAVE_PTHREAD_STACKSEG_NP 1
+/* #undef HAVE_PTHREAD_STACKSEG_NP */
 
 /* Define to 1 if you have the 'ptrace' function. */
 /* #undef HAVE_PTRACE */
@@ -1258,7 +1258,7 @@
 #define HAVE_RESOLV_H 1
 
 /* Define to 1 if you have the 'res_ndestroy' function. */
-#define HAVE_RES_NDESTROY 1
+/* #undef HAVE_RES_NDESTROY */
 
 /* Define to 1 if you have the 'res_nsearch' function. */
 #define HAVE_RES_NSEARCH 1
@@ -1425,7 +1425,7 @@
 /* Define to 1 if SQLite library was compiled with the
    SQLITE_ENABLE_COLUMN_METADATA and has the 'sqlite3_column_table_name'
    function. */
-#define HAVE_SQLITE3_COLUMN_TABLE_NAME 1
+/* #undef HAVE_SQLITE3_COLUMN_TABLE_NAME */
 
 /* Define to 1 if SQLite library has the 'sqlite3_errstr' function. */
 #define HAVE_SQLITE3_ERRSTR 1
@@ -1464,7 +1464,7 @@
 #define HAVE_STDLIB_H 1
 
 /* Define to 1 if you have the 'std_syslog' function. */
-#define HAVE_STD_SYSLOG 1
+/* #undef HAVE_STD_SYSLOG */
 
 /* Define to 1 if you have the 'strcasecmp' function. */
 #define HAVE_STRCASECMP 1
@@ -1771,7 +1771,7 @@
 #define HAVE_ZIP 1
 
 /* Define to 1 if the PHP extension 'zlib' is available. */
-/* #undef HAVE_ZLIB */
+#define HAVE_ZLIB 1
 
 /* Define to 1 if _controlfp is present and usable. */
 /* #undef HAVE__CONTROLFP */
@@ -1789,7 +1789,7 @@
 /* #undef ICONV_ALIASED_LIBICONV */
 
 /* Define to 1 if iconv has broken IGNORE. */
-#define ICONV_BROKEN_IGNORE 1
+/* #undef ICONV_BROKEN_IGNORE */
 
 /* Define to 1 if GD library has JIS-mapped Japanese font support. */
 /* #undef JISX0208 */
@@ -1967,7 +1967,7 @@
 /* #undef PHP_MYSQL_UNIX_SOCK_ADDR */
 
 /* Define to 1 if oniguruma has an invalid entry for KOI8 encoding. */
-/* #undef PHP_ONIG_BAD_KOI8_ENTRY */
+#define PHP_ONIG_BAD_KOI8_ENTRY 1
 
 /* The 'uname' output. */
 #define PHP_OS "Linux"
