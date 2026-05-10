@@ -1,0 +1,66 @@
+name: Android APK Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 with Gradle cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x ./gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload Debug APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PHPAndro-debug-apks
+          path: app/build/outputs/apk/debug/*.apk
+
+  release:
+    name: Create Release and Upload APK
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download APK artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: PHPAndro-debug-apks
+          path: ./apks
+
+      - name: Create GitHub Release and Upload APKs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create build-${{ github.run_number }} \
+            ./apks/*.apk \
+            --title "Build ${{ github.run_number }}" \
+            --notes "Automatic build from commit ${{ github.sha }}"
